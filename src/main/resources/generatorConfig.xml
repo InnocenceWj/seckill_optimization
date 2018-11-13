@@ -61,13 +61,24 @@
         <!-- 列出要生成代码的所有表，这里配置的是不生成Example文件 -->
         <!-- schema即为数据库名 tableName为对应的数据库表 domainObjectName是要生成的实体类 enable*ByExample
                    是否生成 example类   -->
-        <!--<table tableName="seckill" domainObjectName="Seckill"-->
-               <!--enableCountByExample="false" enableUpdateByExample="false"-->
-               <!--enableDeleteByExample="false" enableSelectByExample="false"-->
-               <!--selectByExampleQueryId="false"/>-->
+        <table tableName="goods" domainObjectName="Good"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false"/>
             <!--<generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
-
-        <table tableName="user" domainObjectName="User"
+        <table tableName="order_info" domainObjectName="Order"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false"/>
+        <table tableName="seckill_goods" domainObjectName="SeckillGoods"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false"/>
+        <table tableName="seckill_order" domainObjectName="SeckillOrder"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false"/>
+        <table tableName="seckill_user" domainObjectName="SeckillUser"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

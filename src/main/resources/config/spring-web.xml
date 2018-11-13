@@ -23,7 +23,11 @@
   <mvc:default-servlet-handler/>
 
   <!-- 对静态资源文件的访问  restful-->
-  <!--<mvc:resources mapping="/static/**" location="/static/"/>-->
+  <mvc:resources mapping="/static/**" location="/static/"/>
+  <!--<mvc:resources location="/Images/" mapping="/images/**"/>-->
+  <!--<mvc:resources location="/WEB-INF/jsp/js/" mapping="/js/**"/>-->
+
+
 
   <!-- 3.配置jsp 显示ViewResolver -->
   <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

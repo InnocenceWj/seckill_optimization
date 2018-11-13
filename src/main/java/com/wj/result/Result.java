@@ -1,10 +1,12 @@
 package com.wj.result;
 
 
+import lombok.Data;
+
 /**
  * @author ShallowAn
  */
-
+@Data
 public class Result<T> {
     private int code;
     private String msg;

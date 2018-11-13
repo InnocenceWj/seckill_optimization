@@ -22,22 +22,21 @@
     <!--在queue以及exchange中, 有一个重要的属性durable, 默认为true, 可以防止宕机后数据丢失。-->
     <!--在listener-container中, 有acknowledge属性, 默认为auto, 即消费者成功处理消息后必须有个应答, 如果消费者程序发生异常或者宕机, 消息会被重新放回队列-->
     <admin connection-factory="connectionFactory"/>
-    <queue id="emailQueue" name="email" durable="true"/>
-    <queue id="phoneQueue" name="cellphone"/>     <!--durable默认为true-->
+    <queue id="seckillQueue" name="seckill_queue" durable="true"/>     <!--durable默认为true-->
 
     <!--标准的AMQP Exchange有4种: Direct, Topic, Headers, Fanout, 根据实际需要选择。-->
     <!--Direct: 如果消息的routing key与bingding的routing key直接匹配的话, 消息将会路由到该队列上。-->
     <!--Topic: 如果消息的routing key与bingding的routing key符合通配符匹配的话, 消息将会路由到该队列上。-->
     <!--Headers: 如果消息参数表中的头信息和值都与binding参数表中相匹配, 消息将会路由到该队列上。-->
     <!--Fanout: 不管消息的routing key和参数表的头信息/值是什么, 消息将会路由到该队列上。-->
-    <direct-exchange name="email.exchange" durable="true">
+    <!--<direct-exchange name="email.exchange" durable="true">-->
+        <!--<bindings>-->
+            <!--<binding queue="email"/>     &lt;!&ndash;默认的routing key与队列的名称相同&ndash;&gt;-->
+        <!--</bindings>-->
+    <!--</direct-exchange>-->
+    <direct-exchange name="seckill_exchange">
         <bindings>
-            <binding queue="email"/>     <!--默认的routing key与队列的名称相同-->
-        </bindings>
-    </direct-exchange>
-    <direct-exchange name="cellphone.exchange">
-        <bindings>
-            <binding queue="cellphone"/>
+            <binding queue="seckillQueue"/>
         </bindings>
     </direct-exchange>
 
@@ -45,14 +44,12 @@
     <template id="rabbitTemplate"
               connection-factory="connectionFactory"/>
 
+
     <!--4、配置监听器容器和监听器来接收消息-->
-    <beans:bean id="mailListener" class="com.wj.amqp.listener.MqMailListener"/>
-    <beans:bean id="msgListener" class="com.wj.amqp.listener.MqMsgListener"/>
+    <beans:bean id="seckillListener" class="com.wj.amqp.MQReceiver"/>
     <listener-container connection-factory="connectionFactory" acknowledge="auto">
-        <listener ref="mailListener" method="onMessage"
-                  queues="emailQueue"/>
-        <listener ref="msgListener" method="onMessage"
-                  queues="phoneQueue"/>
+        <listener ref="seckillListener" method="receive"
+                  queues="seckillQueue"/>
     </listener-container>
 
 </beans:beans>
