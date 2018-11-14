@@ -1,7 +1,6 @@
 package com.wj.controller;
 
 import com.wj.controller.baseController.BaseController;
-import com.wj.entity.SeckillUser;
 import com.wj.result.Result;
 import com.wj.service.SeckillUserService;
 import com.wj.utils.MD5Util;
@@ -10,11 +9,9 @@ import com.wj.utils.UUIDUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * @创建人 wj
@@ -35,7 +32,7 @@ public class LoginController extends BaseController{
 
     @RequestMapping(value = "/do_register")
     @ResponseBody
-    public Result<PageData> doRegister()throws Exception {
+    public Result<PageData> doRegister(){
         PageData pd=this.getPageData();
         pd.put("id", UUIDUtil.getGuid());
         pd.put("registerDate", new Date());
