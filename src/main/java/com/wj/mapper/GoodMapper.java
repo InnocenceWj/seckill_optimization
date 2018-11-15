@@ -21,4 +21,6 @@ public interface GoodMapper {
     int updateByPrimaryKey(Good record);
 
     List<PageData> getListAll();
+
+    PageData findById(long id);
 }

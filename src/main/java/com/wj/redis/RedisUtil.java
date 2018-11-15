@@ -1,5 +1,6 @@
 package com.wj.redis;
 
+import java.security.Key;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -12,19 +13,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
 
 /**
  * redis工具类
- *
  */
 @Service
 public class RedisUtil implements RedisDao {
 
     @Resource
-    private  RedisTemplate<String, Object> redisTemplate ;
+    private RedisTemplate<String, Object> redisTemplate;
     @Resource
-    private  StringRedisTemplate stringRedisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     private static final Logger LOG = LoggerFactory.getLogger(RedisUtil.class);
     private static String CACHE_PREFIX;
@@ -32,7 +33,7 @@ public class RedisUtil implements RedisDao {
 
     @Override
     @SuppressWarnings("rawtypes")
-    public  boolean isEmpty(Object obj) {
+    public boolean isEmpty(Object obj) {
         if (obj == null) {
             return true;
         }
@@ -73,74 +74,84 @@ public class RedisUtil implements RedisDao {
         }
         return false;
     }
+
     /**
      * 构建缓存key值
-     * @param key	缓存key
+     *
+     * @param key 缓存key
      * @return
      */
     @Override
-    public  String buildKey(String key) {
+    public String buildKey(String key) {
         if (CACHE_PREFIX == null || "".equals(CACHE_PREFIX)) {
             return key;
         }
         return CACHE_PREFIX + ":" + key;
     }
+
     /**
      * 返回缓存的前缀
+     *
      * @return CACHE_PREFIX_FLAG
      */
     @Override
     public String getCachePrefix() {
         return CACHE_PREFIX;
     }
+
     /**
      * 设置缓存的前缀
+     *
      * @param cachePrefix
      */
     @Override
-    public  void setCachePrefix(String cachePrefix) {
+    public void setCachePrefix(String cachePrefix) {
         if (cachePrefix != null && !"".equals(cachePrefix.trim())) {
             CACHE_PREFIX = cachePrefix.trim();
         }
     }
+
     /**
      * 关闭缓存
-     * @return	true:成功
-     * 		false:失败
+     *
+     * @return true:成功 false:失败
      */
     @Override
-    public  boolean close() {
+    public boolean close() {
         LOG.debug(" cache closed ! ");
         CACHE_CLOSED = true;
         return true;
     }
+
     /**
      * 打开缓存
-     * @return	true:存在
-     * 		false:不存在
+     *
+     * @return true:存在 false:不存在
      */
     @Override
-    public  boolean openCache() {
+    public boolean openCache() {
         CACHE_CLOSED = false;
         return true;
     }
+
     /**
      * 检查缓存是否开启
-     * @return	true:已关闭
-     * 		false:已开启
+     *
+     * @return true:已关闭 false:已开启
      */
     @Override
-    public  boolean isClose() {
+    public boolean isClose() {
         return CACHE_CLOSED;
     }
+
     /**
      * 判断key值是否存在
-     * @param key	缓存的key
-     * @return	true:存在
-     * 		false:不存在
+     *
+     * @param key 缓存的key
+     * @return true:存在 false:不存在
      */
     @Override
-    public  boolean hasKey(String key) {
+    public boolean hasKey(String key) {
         LOG.debug(" hasKey key :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
@@ -153,13 +164,15 @@ public class RedisUtil implements RedisDao {
         }
         return false;
     }
+
     /**
      * 匹配符合正则的key
+     *
      * @param patternKey
      * @return key的集合
      */
     @Override
-    public  Set<String> keys(String patternKey) {
+    public Set<String> keys(String patternKey) {
         LOG.debug(" keys key :{}", patternKey);
         try {
             if (isClose() || isEmpty(patternKey)) {
@@ -174,12 +187,12 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 根据key删除缓存
+     *
      * @param key
-     * @return	true:成功
-     * 		false:失败
+     * @return true:成功 false:失败
      */
     @Override
-    public  boolean del(String... key) {
+    public boolean del(String... key) {
         LOG.debug(" delete key :{}", key.toString());
         try {
             if (isClose() || isEmpty(key)) {
@@ -199,12 +212,12 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 根据key删除缓存
+     *
      * @param key
-     * @return	true:成功
-     * 		false:失败
+     * @return true:成功 false:失败
      */
     @Override
-    public  boolean delPattern(String key) {
+    public boolean delPattern(String key) {
         LOG.debug(" delete Pattern keys :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
@@ -221,12 +234,12 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 删除一组key值
+     *
      * @param keys
-     * @return	true:成功
-     * 		false:失败
+     * @return true:成功 false:失败
      */
     @Override
-    public  boolean del(Set<String> keys) {
+    public boolean del(Set<String> keys) {
         LOG.debug(" delete keys :{}", keys.toString());
         try {
             if (isClose() || isEmpty(keys)) {
@@ -246,13 +259,13 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 设置过期时间
-     * @param key	缓存key
-     * @param seconds	过期秒数
-     * @return	true:成功
-     * 		false:失败
+     *
+     * @param key     缓存key
+     * @param seconds 过期秒数
+     * @return true:成功 false:失败
      */
     @Override
-    public  boolean setExp(String key, long seconds) {
+    public boolean setExp(String key, long seconds) {
         LOG.debug(" setExp key :{}, seconds: {}", key, seconds);
         try {
             if (isClose() || isEmpty(key) || seconds > 0) {
@@ -268,11 +281,12 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 查询过期时间
-     * @param key	缓存key
-     * @return	秒数
+     *
+     * @param key 缓存key
+     * @return 秒数
      */
     @Override
-    public  Long getExpire(String key) {
+    public Long getExpire(String key) {
         LOG.debug(" getExpire key :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
@@ -288,13 +302,13 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 缓存存入key-value
-     * @param key	缓存键
-     * @param value	缓存值
-     * @return	true:成功
-     * 		false:失败
+     *
+     * @param key   缓存键
+     * @param value 缓存值
+     * @return true:成功 false:失败
      */
     @Override
-    public  boolean setString(String key, String value) {
+    public boolean setString(String key, String value) {
         LOG.debug(" setString key :{}, value: {}", key, value);
         try {
             if (isClose() || isEmpty(key) || isEmpty(value)) {
@@ -311,14 +325,14 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 缓存存入key-value
-     * @param key	缓存键
-     * @param value	缓存值
-     * @param seconds	秒数
-     * @return	true:成功
-     * 		false:失败
+     *
+     * @param key     缓存键
+     * @param value   缓存值
+     * @param seconds 秒数
+     * @return true:成功 false:失败
      */
     @Override
-    public  boolean setString(String key, String value, long seconds) {
+    public boolean setString(String key, String value, long seconds) {
         LOG.debug(" setString key :{}, value: {}, timeout:{}", key, value, seconds);
         try {
             if (isClose() || isEmpty(key) || isEmpty(value)) {
@@ -335,11 +349,12 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 根据key取出String value
-     * @param key	缓存key值
-     * @return	String	缓存的String
+     *
+     * @param key 缓存key值
+     * @return String    缓存的String
      */
     @Override
-    public  String getString(String key) {
+    public String getString(String key) {
         LOG.debug(" getString key :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
@@ -355,11 +370,12 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 去的缓存中的最大值并+1
-     * @param key	缓存key值
-     * @return	long	缓存中的最大值+1
+     *
+     * @param key 缓存key值
+     * @return long    缓存中的最大值+1
      */
     @Override
-    public  long incr(String key) {
+    public long incr(String key) {
         LOG.debug(" incr key :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
@@ -375,13 +391,13 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 缓存中存入序列化的Object对象
-     * @param key	缓存key
-     * @param obj	存入的序列化对象
-     * @return	true:成功
-     * 		false:失败
+     *
+     * @param key 缓存key
+     * @param obj 存入的序列化对象
+     * @return true:成功 false:失败
      */
     @Override
-    public  boolean set(String key, Object obj) {
+    public boolean set(String key, Object obj) {
         LOG.debug(" set key :{}, value:{}", key, obj);
         try {
             if (isClose() || isEmpty(key) || isEmpty(obj)) {
@@ -397,13 +413,13 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 缓存中存入序列化的Object对象
-     * @param key	缓存key
-     * @param obj	存入的序列化对象
-     * @return	true:成功
-     * 		false:失败
+     *
+     * @param key 缓存key
+     * @param obj 存入的序列化对象
+     * @return true:成功 false:失败
      */
     @Override
-    public  boolean setObj(String key, Object obj, long seconds) {
+    public boolean setObj(String key, Object obj, long seconds) {
         LOG.debug(" set key :{}, value:{}, seconds:{}", key, obj, seconds);
         try {
             if (isClose() || isEmpty(key) || isEmpty(obj)) {
@@ -423,12 +439,13 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 取出缓存中存储的序列化对象
-     * @param key	缓存key
-     * @param clazz	对象类
+     *
+     * @param key   缓存key
+     * @param clazz 对象类
      * @return <T>	序列化对象
      */
     @Override
-    public  <T> T getObj(String key, Class<T> clazz) {
+    public <T> T getObj(String key, Class<T> clazz) {
         LOG.debug(" get key :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
@@ -444,14 +461,14 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 存入Map数组
+     *
      * @param <T>
-     * @param key	缓存key
-     * @param map	缓存map
-     * @return	true:成功
-     * 		false:失败
+     * @param key 缓存key
+     * @param map 缓存map
+     * @return true:成功 false:失败
      */
     @Override
-    public  <T> boolean setMap(String key, Map<String, T> map) {
+    public <T> boolean setMap(String key, Map<String, T> map) {
         try {
             if (isClose() || isEmpty(key) || isEmpty(map)) {
                 return false;
@@ -467,12 +484,13 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 取出缓存的map
-     * @param key	缓存key
-     * @return map	缓存的map
+     *
+     * @param key 缓存key
+     * @return map    缓存的map
      */
     @SuppressWarnings("rawtypes")
     @Override
-    public  Map getMap(String key) {
+    public Map getMap(String key) {
         LOG.debug(" getMap key :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
@@ -488,11 +506,12 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 查询缓存的map的集合大小
-     * @param key	缓存key
-     * @return int	缓存map的集合大小
+     *
+     * @param key 缓存key
+     * @return int    缓存map的集合大小
      */
     @Override
-    public  long getMapSize(String key) {
+    public long getMapSize(String key) {
         LOG.debug(" getMap key :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
@@ -509,12 +528,13 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 根据key以及hashKey取出对应的Object对象
-     * @param key	缓存key
-     * @param hashKey	对应map的key
-     * @return object	map中的对象
+     *
+     * @param key     缓存key
+     * @param hashKey 对应map的key
+     * @return object    map中的对象
      */
     @Override
-    public  Object getMapKey(String key, String hashKey) {
+    public Object getMapKey(String key, String hashKey) {
         LOG.debug(" getMapkey :{}, hashKey:{}", key, hashKey);
         try {
             if (isClose() || isEmpty(key) || isEmpty(hashKey)) {
@@ -530,11 +550,12 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 取出缓存中map的所有key值
-     * @param key	缓存key
+     *
+     * @param key 缓存key
      * @return Set<String> map的key值合集
      */
     @Override
-    public  Set<Object> getMapKeys(String key) {
+    public Set<Object> getMapKeys(String key) {
         LOG.debug(" getMapKeys key :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
@@ -550,13 +571,13 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 删除map中指定的key值
-     * @param key	缓存key
-     * @param hashKey	map中指定的hashKey
-     * @return	true:成功
-     * 		false:失败
+     *
+     * @param key     缓存key
+     * @param hashKey map中指定的hashKey
+     * @return true:成功 false:失败
      */
     @Override
-    public  boolean delMapKey(String key, String hashKey) {
+    public boolean delMapKey(String key, String hashKey) {
         LOG.debug(" delMapKey key :{}, hashKey:{}", key, hashKey);
         try {
             if (isClose() || isEmpty(key) || isEmpty(hashKey)) {
@@ -573,15 +594,15 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 存入Map数组
+     *
      * @param <T>
-     * @param key	缓存key
-     * @param map	缓存map
-     * @param seconds	秒数
-     * @return	true:成功
-     * 		false:失败
+     * @param key     缓存key
+     * @param map     缓存map
+     * @param seconds 秒数
+     * @return true:成功 false:失败
      */
     @Override
-    public  <T> boolean setMapExp(String key, Map<String, T> map, long seconds) {
+    public <T> boolean setMapExp(String key, Map<String, T> map, long seconds) {
         LOG.debug(" setMapExp key :{}, value: {}, seconds:{}", key, map, seconds);
         try {
             if (isClose() || isEmpty(key) || isEmpty(map)) {
@@ -599,15 +620,15 @@ public class RedisUtil implements RedisDao {
 
     /**
      * map中加入新的key
+     *
      * @param <T>
-     * @param key	缓存key
-     * @param hashKey	map的Key值
-     * @param value	map的value值
-     * @return	true:成功
-     * 		false:失败
+     * @param key     缓存key
+     * @param hashKey map的Key值
+     * @param value   map的value值
+     * @return true:成功 false:失败
      */
     @Override
-    public  <T> boolean addMap(String key, String hashKey, T value) {
+    public <T> boolean addMap(String key, String hashKey, T value) {
         LOG.debug(" addMap key :{}, hashKey: {}, value:{}", key, hashKey, value);
         try {
             if (isClose() || isEmpty(key) || isEmpty(hashKey) || isEmpty(value)) {
@@ -624,14 +645,14 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 缓存存入List
+     *
      * @param <T>
-     * @param key	缓存key
-     * @param list	缓存List
-     * @return	true:成功
-     * 		false:失败
+     * @param key  缓存key
+     * @param list 缓存List
+     * @return true:成功 false:失败
      */
     @Override
-    public  <T> boolean setList(String key, List<T> list) {
+    public <T> boolean setList(String key, List<T> list) {
         LOG.debug(" setList key :{}, list: {}", key, list);
         try {
             if (isClose() || isEmpty(key) || isEmpty(list)) {
@@ -647,11 +668,12 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 根据key值取出对应的list合集
-     * @param key	缓存key
+     *
+     * @param key 缓存key
      * @return List<Object> 缓存中对应的list合集
      */
     @Override
-    public  <V> List<V> getList(String key) {
+    public <V> List<V> getList(String key) {
         LOG.debug(" getList key :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
@@ -667,13 +689,14 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 根据key值截取对应的list合集
-     * @param key	缓存key
-     * @param start	开始位置
-     * @param end	结束位置
+     *
+     * @param key   缓存key
+     * @param start 开始位置
+     * @param end   结束位置
      * @return
      */
     @Override
-    public  void trimList(String key, int start, int end) {
+    public void trimList(String key, int start, int end) {
         LOG.debug(" trimList key :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
@@ -688,12 +711,13 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 取出list合集中指定位置的对象
-     * @param key	缓存key
-     * @param index	索引位置
-     * @return Object	list指定索引位置的对象
+     *
+     * @param key   缓存key
+     * @param index 索引位置
+     * @return Object    list指定索引位置的对象
      */
     @Override
-    public  Object getIndexList(String key, int index) {
+    public Object getIndexList(String key, int index) {
         LOG.debug(" getIndexList key :{}, index:{}", key, index);
         try {
             if (isClose() || isEmpty(key) || index < 0) {
@@ -706,15 +730,16 @@ public class RedisUtil implements RedisDao {
         }
         return null;
     }
+
     /**
      * Object存入List
-     * @param prefix	缓存key
-     * @param value	List中的值
-     * @return	true:成功
-     * 		false:失败
+     *
+     * @param prefix 缓存key
+     * @param value  List中的值
+     * @return true:成功 false:失败
      */
     @Override
-    public  boolean addList(KeyPrefix prefix, Object value) {
+    public boolean addList(KeyPrefix prefix, Object value) {
         LOG.debug(" addList key :{}, value:{}", prefix, value);
         try {
             if (isClose() || isEmpty(prefix.getPrefix()) || isEmpty(value)) {
@@ -731,14 +756,14 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 缓存存入List
+     *
      * @param <T>
-     * @param prefix	缓存key,秒数
-     * @param list	缓存List
-     * @return	true:成功
-     * 		false:失败
+     * @param prefix 缓存key,秒数
+     * @param list   缓存List
+     * @return true:成功 false:失败
      */
     @Override
-    public  <T> boolean setList(KeyPrefix prefix, List<T> list) {
+    public <T> boolean setList(KeyPrefix prefix, List<T> list) {
         LOG.debug(" setList key :{}, value:{}, seconds:{}", prefix.getPrefix(), list, prefix.expireSeconds());
         try {
             if (isClose() || isEmpty(prefix.getPrefix()) || isEmpty(list)) {
@@ -758,14 +783,14 @@ public class RedisUtil implements RedisDao {
 
     /**
      * set集合存入缓存
+     *
      * @param <T>
-     * @param key	缓存key
-     * @param set	缓存set集合
-     * @return	true:成功
-     * 		false:失败
+     * @param key 缓存key
+     * @param set 缓存set集合
+     * @return true:成功 false:失败
      */
     @Override
-    public  <T> boolean setSet(String key, Set<T> set) {
+    public <T> boolean setSet(String key, Set<T> set) {
         LOG.debug(" setSet key :{}, value:{}", key, set);
         try {
             if (isClose() || isEmpty(key) || isEmpty(set)) {
@@ -782,13 +807,13 @@ public class RedisUtil implements RedisDao {
 
     /**
      * set集合中增加value
-     * @param key	缓存key
-     * @param value	增加的value
-     * @return	true:成功
-     * 		false:失败
+     *
+     * @param key   缓存key
+     * @param value 增加的value
+     * @return true:成功 false:失败
      */
     @Override
-    public  boolean addSet(String key, Object value) {
+    public boolean addSet(String key, Object value) {
         LOG.debug(" addSet key :{}, value:{}", key, value);
         try {
             if (isClose() || isEmpty(key) || isEmpty(value)) {
@@ -805,15 +830,15 @@ public class RedisUtil implements RedisDao {
 
     /**
      * set集合存入缓存
+     *
      * @param <T>
-     * @param key	缓存key
-     * @param set	缓存set集合
-     * @param seconds	秒数
-     * @return	true:成功
-     * 		false:失败
+     * @param key     缓存key
+     * @param set     缓存set集合
+     * @param seconds 秒数
+     * @return true:成功 false:失败
      */
     @Override
-    public  <T> boolean setSet(String key, Set<T> set, long seconds) {
+    public <T> boolean setSet(String key, Set<T> set, long seconds) {
         LOG.debug(" setSet key :{}, value:{}, seconds:{}", key, set, seconds);
         try {
             if (isClose() || isEmpty(key) || isEmpty(set)) {
@@ -833,12 +858,13 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 取出缓存中对应的set合集
+     *
      * @param <T>
-     * @param key	缓存key
+     * @param key 缓存key
      * @return Set<Object> 缓存中的set合集
      */
     @Override
-    public  <T> Set<T> getSet(String key) {
+    public <T> Set<T> getSet(String key) {
         LOG.debug(" getSet key :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
@@ -854,13 +880,14 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 有序集合存入数值
-     * @param key	缓存key
-     * @param value	缓存value
-     * @param score	评分
+     *
+     * @param key   缓存key
+     * @param value 缓存value
+     * @param score 评分
      * @return
      */
     @Override
-    public  boolean addZSet(String key, Object value, double score) {
+    public boolean addZSet(String key, Object value, double score) {
         LOG.debug(" addZSet key :{},value:{}, score:{}", key, value, score);
         try {
             if (isClose() || isEmpty(key) || isEmpty(value)) {
@@ -876,12 +903,13 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 从有序集合中删除指定值
-     * @param key	缓存key
-     * @param value	缓存value
+     *
+     * @param key   缓存key
+     * @param value 缓存value
      * @return
      */
     @Override
-    public  boolean removeZSet(String key, Object value) {
+    public boolean removeZSet(String key, Object value) {
         LOG.debug(" removeZSet key :{},value:{}", key, value);
         try {
             if (isClose() || isEmpty(key) || isEmpty(value)) {
@@ -898,13 +926,14 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 从有序集合中删除指定位置的值
-     * @param key	缓存key
-     * @param start	起始位置
-     * @param end	结束为止
+     *
+     * @param key   缓存key
+     * @param start 起始位置
+     * @param end   结束为止
      * @return
      */
     @Override
-    public  boolean removeZSet(String key, long start, long end) {
+    public boolean removeZSet(String key, long start, long end) {
         LOG.debug(" removeZSet key :{},start:{}, end:{}", key, start, end);
         try {
             if (isClose() || isEmpty(key)) {
@@ -921,13 +950,14 @@ public class RedisUtil implements RedisDao {
 
     /**
      * 从有序集合中获取指定位置的值
-     * @param key	缓存key
-     * @param start	起始位置
-     * @param end	结束为止
+     *
+     * @param key   缓存key
+     * @param start 起始位置
+     * @param end   结束为止
      * @return
      */
     @Override
-    public  <T> Set<T> getZSet(String key, long start, long end) {
+    public <T> Set<T> getZSet(String key, long start, long end) {
         LOG.debug(" getZSet key :{},start:{}, end:{}", key, start, end);
         try {
             if (isClose() || isEmpty(key)) {
@@ -940,4 +970,57 @@ public class RedisUtil implements RedisDao {
         }
         return Collections.emptySet();
     }
+
+    @Override
+    public boolean setVerfy(KeyPrefix prefix, String s, int rnd) {
+        LOG.debug(" addList key :{}, value:{}", prefix, rnd);
+        String result = String.valueOf(rnd);
+        try {
+            if (isClose() || isEmpty(result) || isEmpty(result)) {
+                return false;
+            }
+            String key = buildKey(prefix.getPrefix() + s);
+            int seconds = prefix.expireSeconds();
+            if (seconds > 0) {
+                stringRedisTemplate.opsForValue().set(key, result, seconds, TimeUnit.SECONDS);
+            }
+            return true;
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            return false;
+        }
+    }
+
+    @Override
+    public Integer getVerfy(KeyPrefix prefix, String key, Class<Integer> integerClass) {
+        LOG.debug(" get key :{}", key);
+        try {
+            if (isClose() || isEmpty(key)) {
+                return null;
+            }
+            String realKey = buildKey(prefix.getPrefix() + key);
+            return (Integer) redisTemplate.opsForValue().get(realKey);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean deleteVerfy(KeyPrefix prefix, String key) {
+        LOG.debug(" delete Pattern keys :{}", key);
+        try {
+            if (isClose() || isEmpty(key)) {
+                return false;
+            }
+            String realKey = buildKey(prefix.getPrefix() + key);
+            redisTemplate.delete(redisTemplate.keys(realKey));
+            return true;
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return false;
+    }
+
+
 }

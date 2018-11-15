@@ -388,4 +388,9 @@ public interface RedisDao {
      */
     <T> Set<T> getZSet(String key, long start, long end);
 
+    boolean setVerfy(KeyPrefix keyPrefix, String s, int rnd);
+
+    Integer getVerfy(KeyPrefix prefix, String s, Class<Integer> integerClass);
+
+    boolean deleteVerfy(KeyPrefix prefix, String s);
 }
