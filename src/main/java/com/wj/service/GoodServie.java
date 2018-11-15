@@ -12,4 +12,6 @@ import java.util.List;
  */
 public interface GoodServie {
     List<PageData> getListAll();
+
+    PageData findById(long id);
 }
