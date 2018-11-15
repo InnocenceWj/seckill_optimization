@@ -12,7 +12,7 @@ public interface GoodMapper {
 
     int insertSelective(Good record);
 
-    Good selectByPrimaryKey(Long id);
+    PageData selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(Good record);
 
