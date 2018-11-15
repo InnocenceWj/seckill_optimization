@@ -20,15 +20,15 @@
   </sql>
 
   <select id="getListAll"  resultType="com.wj.utils.PageData">
-    select
-    <include refid="Base_Column_List" />
-    from goods
+    SELECT
+    g.*,sg.*
+    FROM
+    goods g
+    LEFT JOIN seckill_goods sg ON g.id=sg.goods_id
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="com.wj.utils.PageData">
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from goods
     where id = #{id,jdbcType=BIGINT}
   </select>
