@@ -7,37 +7,49 @@
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-<!-- 配置SpringMVC -->
-  <!-- 1.开启SpringMVC注解模式 -->
-  <!-- 简化配置：
-      (1)自动注册DefaultAnootationHandlerMapping,AnotationMethodHandlerAdapter
-      (2)提供一系列：数据绑定，数字和日期的format @NumberFormat, @DateTimeFormat, xml,json默认读写支持
-  -->
-  <mvc:annotation-driven />
+    <!-- 配置SpringMVC -->
+    <!-- 1.开启SpringMVC注解模式 -->
+    <!-- 简化配置：
+        (1)自动注册DefaultAnootationHandlerMapping,AnotationMethodHandlerAdapter
+        (2)提供一系列：数据绑定，数字和日期的format @NumberFormat, @DateTimeFormat, xml,json默认读写支持
+    -->
+    <mvc:annotation-driven/>
 
-  <!-- 2.静态资源默认servlet配置
-      (1)加入对静态资源的处理：js,gif,png
-      (2)允许使用"/"做整体映射:servlet-mapping映射路径："/"
-   -->
-  <!--使用默认的静态资源处理Servlet处理静态资源(涉及spring-mvc.xml, web.xml)-->
-  <mvc:default-servlet-handler/>
+    <!-- 2.静态资源默认servlet配置
+        (1)加入对静态资源的处理：js,gif,png
+        (2)允许使用"/"做整体映射:servlet-mapping映射路径："/"
+     -->
+    <!--使用默认的静态资源处理Servlet处理静态资源(涉及spring-mvc.xml, web.xml)-->
+    <mvc:default-servlet-handler/>
 
-  <!-- 对静态资源文件的访问  restful-->
-  <mvc:resources mapping="/static/**" location="/static/"/>
-  <!--<mvc:resources location="/Images/" mapping="/images/**"/>-->
-  <!--<mvc:resources location="/WEB-INF/jsp/js/" mapping="/js/**"/>-->
+    <!-- 对静态资源文件的访问  restful-->
+    <mvc:resources mapping="/static/**" location="/static/"/>
+    <!--<mvc:resources location="/Images/" mapping="/images/**"/>-->
+    <!--<mvc:resources location="/WEB-INF/jsp/js/" mapping="/js/**"/>-->
 
 
+    <!-- 3.配置jsp 显示ViewResolver -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
 
-  <!-- 3.配置jsp 显示ViewResolver -->
-  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-    <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-    <property name="prefix" value="/WEB-INF/jsp/" />
-    <property name="suffix" value=".jsp" />
-  </bean>
+    <!--xml存在非法字符，启动报错：SAXParseException: cvc-complex-type.2.3: 元素 'beans' 必须不含字符 [子级], 因为该类型的内容类型为“仅元素”。
+        如果反复检查，未发现错误，可以注释后，就会发现非法字符出在哪里。
+        这句是下面注释再注释后的样子：  &lt;!&ndash; 访问拦截&ndash;&gt;
+        非法字符隐藏在这里删去，重新注释，便正确了  
+     -->
+    <!--访问拦截-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**/**"/>
+            <bean class="com.wj.filter.LoginHandlerInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 
-  <!-- 4.扫描web相关的bean -->
-  <context:component-scan base-package="com.wj.controller"  use-default-filters="false">
-    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-  </context:component-scan>
+    <!-- 4.扫描web相关的bean -->
+    <context:component-scan base-package="com.wj.controller" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
 </beans>

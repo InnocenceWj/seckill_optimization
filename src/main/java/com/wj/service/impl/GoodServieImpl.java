@@ -38,7 +38,7 @@ public class GoodServieImpl implements GoodServie {
     public PageData findById(long id) {
         PageData pd = redisDao.getObj(GoodKey.goodsDetail.getPrefix(), PageData.class);
         if(null==pd){
-            pd = goodMapper.selectByPrimaryKey(id);
+            pd = goodMapper.findById(id);
             redisDao.setObj(GoodKey.goodsDetail.getPrefix(),pd,GoodKey.goodsDetail.expireSeconds());
         }
         return pd;

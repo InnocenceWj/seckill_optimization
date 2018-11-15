@@ -26,6 +26,14 @@
     goods g
     LEFT JOIN seckill_goods sg ON g.id=sg.goods_id
   </select>
+  <select id="findById"  resultType="com.wj.utils.PageData" parameterType="java.lang.Long">
+    SELECT
+    g.*,sg.*
+    FROM
+    goods g
+    LEFT JOIN seckill_goods sg ON g.id=sg.goods_id
+    WHERE g.id=#{id}
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="com.wj.utils.PageData">
     select 
     <include refid="Base_Column_List" />
