@@ -1,5 +1,6 @@
 package com.wj.controller;
 
+import com.wj.const_wj.Const;
 import com.wj.controller.baseController.BaseController;
 import com.wj.result.Result;
 import com.wj.service.SeckillUserService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
@@ -50,10 +52,11 @@ public class LoginController extends BaseController{
 
     @RequestMapping(value = "/do_login")
     @ResponseBody
-    public Result<PageData> doLogin(HttpServletResponse response) {
+    public Result<PageData> doLogin(HttpServletResponse response, HttpServletRequest request) {
         PageData pd=this.getPageData();
         //登录
         String token = seckillUserService.login(response, pd);
+        request.getSession().setAttribute(Const.SESSION_USER,token);
         pd.put("token",token);
         return Result.success(pd);
     }
