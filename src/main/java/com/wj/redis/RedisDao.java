@@ -88,7 +88,7 @@ public interface RedisDao {
      * @param key
      * @return true:成功 false:失败
      */
-    boolean delPattern(String key);
+    boolean delPattern(String key,long id);
 
     /**
      * 删除一组key值
@@ -123,7 +123,7 @@ public interface RedisDao {
      * @param value 缓存值
      * @return true:成功 false:失败
      */
-    boolean setString(String key, String value);
+    boolean setString(String key,long id, String value);
 
     /**
      * 缓存存入key-value
@@ -141,7 +141,7 @@ public interface RedisDao {
      * @param key 缓存key值
      * @return String    缓存的String
      */
-    String getString(String key);
+    String getString(String key,long id);
 
     /**
      * 去的缓存中的最大值并+1
@@ -167,8 +167,16 @@ public interface RedisDao {
      * @param obj 存入的序列化对象
      * @return true:成功 false:失败
      */
-    boolean setObj(String key, Object obj, long seconds);
+    boolean setObj(String key,long id, Object obj, long seconds);
 
+    /**
+     * 缓存中存入序列化的Object对象
+     *
+     * @param key 缓存key
+     * @param obj 存入的序列化对象
+     * @return true:成功 false:失败
+     */
+    boolean setGood(String key,long id, Object obj);
     /**
      * 取出缓存中存储的序列化对象
      *
@@ -176,7 +184,7 @@ public interface RedisDao {
      * @param clazz 对象类
      * @return <T>	序列化对象
      */
-    <T> T getObj(String key, Class<T> clazz);
+    <T> T getObj(String key,long id, Class<T> clazz);
 
     /**
      * 存入Map数组
@@ -388,9 +396,4 @@ public interface RedisDao {
      */
     <T> Set<T> getZSet(String key, long start, long end);
 
-    boolean setVerfy(KeyPrefix keyPrefix, String s, int rnd);
-
-    Integer getVerfy(KeyPrefix prefix, String s, Class<Integer> integerClass);
-
-    boolean deleteVerfy(KeyPrefix prefix, String s);
 }

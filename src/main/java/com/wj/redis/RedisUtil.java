@@ -217,13 +217,13 @@ public class RedisUtil implements RedisDao {
      * @return true:成功 false:失败
      */
     @Override
-    public boolean delPattern(String key) {
+    public boolean delPattern(String key,long id) {
         LOG.debug(" delete Pattern keys :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
                 return false;
             }
-            key = buildKey(key);
+            key = buildKey(key+id);
             redisTemplate.delete(redisTemplate.keys(key));
             return true;
         } catch (Exception e) {
@@ -308,13 +308,13 @@ public class RedisUtil implements RedisDao {
      * @return true:成功 false:失败
      */
     @Override
-    public boolean setString(String key, String value) {
+    public boolean setString(String key,long id, String value) {
         LOG.debug(" setString key :{}, value: {}", key, value);
         try {
             if (isClose() || isEmpty(key) || isEmpty(value)) {
                 return false;
             }
-            key = buildKey(key);
+            key = buildKey(key+id);
             stringRedisTemplate.opsForValue().set(key, value);
             return true;
         } catch (Exception e) {
@@ -354,13 +354,13 @@ public class RedisUtil implements RedisDao {
      * @return String    缓存的String
      */
     @Override
-    public String getString(String key) {
+    public String getString(String key,long id) {
         LOG.debug(" getString key :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
                 return null;
             }
-            key = buildKey(key);
+            key = buildKey(key+id);
             return stringRedisTemplate.opsForValue().get(key);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
@@ -419,17 +419,33 @@ public class RedisUtil implements RedisDao {
      * @return true:成功 false:失败
      */
     @Override
-    public boolean setObj(String key, Object obj, long seconds) {
+    public boolean setObj(String key,long id, Object obj, long seconds) {
         LOG.debug(" set key :{}, value:{}, seconds:{}", key, obj, seconds);
         try {
             if (isClose() || isEmpty(key) || isEmpty(obj)) {
                 return false;
             }
-            key = buildKey(key);
+            key = buildKey(key+id);
             redisTemplate.opsForValue().set(key, obj);
             if (seconds > 0) {
                 redisTemplate.expire(key, seconds, TimeUnit.SECONDS);
             }
+            return true;
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean setGood(String key, long id, Object obj) {
+        LOG.debug(" set key :{}, value:{}, seconds:{}", key, obj);
+        try {
+            if (isClose() || isEmpty(key) || isEmpty(obj)) {
+                return false;
+            }
+            key = buildKey(key+id);
+            redisTemplate.opsForValue().set(key, obj);
             return true;
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
@@ -445,13 +461,13 @@ public class RedisUtil implements RedisDao {
      * @return <T>	序列化对象
      */
     @Override
-    public <T> T getObj(String key, Class<T> clazz) {
+    public <T> T getObj(String key,long id, Class<T> clazz) {
         LOG.debug(" get key :{}", key);
         try {
             if (isClose() || isEmpty(key)) {
                 return null;
             }
-            key = buildKey(key);
+            key = buildKey(key+id);
             return (T) redisTemplate.opsForValue().get(key);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
@@ -969,57 +985,6 @@ public class RedisUtil implements RedisDao {
             LOG.error(e.getMessage(), e);
         }
         return Collections.emptySet();
-    }
-
-    @Override
-    public boolean setVerfy(KeyPrefix prefix, String s, int rnd) {
-        LOG.debug(" addList key :{}, value:{}", prefix, rnd);
-        String result = String.valueOf(rnd);
-        try {
-            if (isClose() || isEmpty(result) || isEmpty(result)) {
-                return false;
-            }
-            String key = buildKey(prefix.getPrefix() + s);
-            int seconds = prefix.expireSeconds();
-            if (seconds > 0) {
-                stringRedisTemplate.opsForValue().set(key, result, seconds, TimeUnit.SECONDS);
-            }
-            return true;
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            return false;
-        }
-    }
-
-    @Override
-    public Integer getVerfy(KeyPrefix prefix, String key, Class<Integer> integerClass) {
-        LOG.debug(" get key :{}", key);
-        try {
-            if (isClose() || isEmpty(key)) {
-                return null;
-            }
-            String realKey = buildKey(prefix.getPrefix() + key);
-            return (Integer) redisTemplate.opsForValue().get(realKey);
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-        }
-        return null;
-    }
-
-    @Override
-    public boolean deleteVerfy(KeyPrefix prefix, String key) {
-        LOG.debug(" delete Pattern keys :{}", key);
-        try {
-            if (isClose() || isEmpty(key)) {
-                return false;
-            }
-            String realKey = buildKey(prefix.getPrefix() + key);
-            redisTemplate.delete(redisTemplate.keys(realKey));
-            return true;
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-        }
-        return false;
     }
 
 

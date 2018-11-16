@@ -1,6 +1,7 @@
 package com.wj.mapper;
 
 import com.wj.entity.SeckillOrder;
+import com.wj.utils.PageData;
 
 public interface SeckillOrderMapper {
     int deleteByPrimaryKey(Long id);
@@ -14,4 +15,6 @@ public interface SeckillOrderMapper {
     int updateByPrimaryKeySelective(SeckillOrder record);
 
     int updateByPrimaryKey(SeckillOrder record);
+
+    PageData findByGoodIdAndUserId(long goodId, long userId);
 }

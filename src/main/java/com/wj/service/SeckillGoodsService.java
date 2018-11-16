@@ -14,4 +14,10 @@ public interface SeckillGoodsService {
     BufferedImage createVerifyCode(String token, long goodsId);
 
     boolean checkVerfyCode(PageData pd);
+
+    String createPath(PageData pd, long goodId);
+
+    boolean checkPath(PageData pd, long goodId);
+
+    int reduceStock(long goodId);
 }

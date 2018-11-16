@@ -8,6 +8,7 @@ import com.wj.service.SeckillUserService;
 import com.wj.utils.MD5Util;
 import com.wj.utils.PageData;
 import com.wj.utils.UUIDUtil;
+import com.wj.utils.UserUtils;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -52,8 +53,11 @@ public class SeckillUserServiceImpl implements SeckillUserService {
             throw new GlobalException(CodeMsg.PASSWORD_ERROR);
         }
         String token = UUIDUtil.uuid();
-        //生成cookie
-        addCookie(response, token, user);
+
+//        //生成cookie
+//        addCookie(response, token, user);
+//        把用户放到session中
+        UserUtils.setUser(user);
         return token;
     }
 }

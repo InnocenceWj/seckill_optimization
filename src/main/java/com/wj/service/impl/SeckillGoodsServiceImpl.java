@@ -1,11 +1,16 @@
 package com.wj.service.impl;
 
+import com.wj.entity.SeckillGoods;
 import com.wj.entity.SeckillUser;
 import com.wj.mapper.GoodMapper;
+import com.wj.mapper.SeckillUserMapper;
+import com.wj.redis.GoodKey;
 import com.wj.redis.RedisDao;
 import com.wj.redis.SeckillKey;
 import com.wj.service.SeckillGoodsService;
+import com.wj.utils.MD5Util;
 import com.wj.utils.PageData;
+import com.wj.utils.UUIDUtil;
 import com.wj.utils.VerfyUtil;
 import org.springframework.stereotype.Service;
 
@@ -64,25 +69,58 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
         g.dispose();
         //把验证码存到redis中
         int rnd = calc(verifyCode);
-        redisDao.setVerfy(SeckillKey.getSeckillVerifyCode, token + "," + goodsId, rnd);
+        redisDao.setObj(SeckillKey.getSeckillVerifyCode.getPrefix() + token, goodsId, rnd, SeckillKey.getSeckillVerifyCode.expireSeconds());
         //输出图片
         return image;
     }
 
     @Override
     public boolean checkVerfyCode(PageData pd) {
-        String token=pd.getString("token");
-        Long goodId= (Long) pd.get("goodId");
-        int verifyCode=(Integer) pd.get("verifyCode");
+        String token = pd.getString("token");
+        Long goodId = Long.parseLong(pd.getString("goodId"));
+        int verifyCode = Integer.valueOf(pd.getString("verifyCode"));
         if (goodId <= 0) {
             return false;
         }
-        int oldCode=redisDao.getVerfy(SeckillKey.getSeckillVerifyCode,token + "," + goodId,Integer.class);
+        int oldCode = redisDao.getObj(SeckillKey.getSeckillVerifyCode.getPrefix() + token, goodId, Integer.class);
         if (oldCode - verifyCode != 0) {
             return false;
         }
-        redisDao.deleteVerfy(SeckillKey.getSeckillVerifyCode, token + "," + goodId);
+        redisDao.delPattern(SeckillKey.getSeckillVerifyCode.getPrefix() + token, goodId);
         return true;
+    }
+
+    @Override
+    public String createPath(PageData pd, long goodId) {
+        String token = pd.getString("token");
+        String md5 = MD5Util.md5(UUIDUtil.uuid() + goodId);
+        redisDao.setString(SeckillKey.getSeckillPath.getPrefix()+token,goodId,md5);
+        return md5;
+    }
+
+    @Override
+    public boolean checkPath(PageData pd, long goodId) {
+        String token = pd.getString("token");
+        String md5 = pd.getString("md5");
+        String md5Old = redisDao.getString(SeckillKey.getSeckillPath.getPrefix()+token,goodId);
+//
+        if(md5.equals(md5Old)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int reduceStock(long goodId) {
+        PageData pd = redisDao.getObj(GoodKey.goodsDetail.getPrefix(),goodId, PageData.class);
+        int seckillStock= (int) pd.get("stock_count");
+        int goodStock= (int) pd.get("goods_stock");
+        seckillStock=seckillStock-1;
+        goodStock=goodStock-1;
+        pd.put("stock_count",seckillStock);
+        pd.put("goods_stock",goodStock);
+        redisDao.setGood(GoodKey.goodsDetail.getPrefix(),goodId,pd);
+        return seckillStock;
     }
 
 

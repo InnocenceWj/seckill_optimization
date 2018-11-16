@@ -4,11 +4,13 @@ import com.wj.mapper.GoodMapper;
 import com.wj.redis.GoodKey;
 import com.wj.redis.RedisDao;
 import com.wj.service.GoodServie;
+import com.wj.utils.MapUtil;
 import com.wj.utils.PageData;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @创建人 wj
@@ -27,20 +29,26 @@ public class GoodServieImpl implements GoodServie {
     @Override
     public List<PageData> getListAll() {
         List<PageData> list = redisDao.getList(GoodKey.goodsList.getPrefix());
+        Map<Long,Boolean> localOverMap=MapUtil.getInstance();
         if (null == list || list.isEmpty()) {
             list = goodMapper.getListAll();
             redisDao.setList(GoodKey.goodsList, list);
+            for (PageData pd : list) {
+                long id= (Long) pd.get("id");
+                redisDao.setGood(GoodKey.goodsDetail.getPrefix(),id,pd);
+                localOverMap.put(id, false);
+            }
         }
         return list;
     }
 
     @Override
     public PageData findById(long id) {
-        PageData pd = redisDao.getObj(GoodKey.goodsDetail.getPrefix(), PageData.class);
-        if(null==pd){
-            pd = goodMapper.findById(id);
-            redisDao.setObj(GoodKey.goodsDetail.getPrefix(),pd,GoodKey.goodsDetail.expireSeconds());
-        }
+        PageData pd = redisDao.getObj(GoodKey.goodsDetail.getPrefix(),id, PageData.class);
+//        if(null==pd){
+//            pd = goodMapper.findById(id);
+//            redisDao.setGood(GoodKey.goodsDetail.getPrefix(),id,pd);
+//        }
         return pd;
     }
 }
