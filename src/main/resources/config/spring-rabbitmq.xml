@@ -21,7 +21,7 @@
     <!--2、配置队列queue, Exchange, 以及将他们结合在一起的binding-->
     <!--在queue以及exchange中, 有一个重要的属性durable, 默认为true, 可以防止宕机后数据丢失。-->
     <!--在listener-container中, 有acknowledge属性, 默认为auto, 即消费者成功处理消息后必须有个应答, 如果消费者程序发生异常或者宕机, 消息会被重新放回队列-->
-    <admin connection-factory="connectionFactory"/>
+    <admin connection-factory="connectionFactory" />
     <queue id="seckillQueue" name="seckill_queue" durable="true"/>     <!--durable默认为true-->
 
     <!--标准的AMQP Exchange有4种: Direct, Topic, Headers, Fanout, 根据实际需要选择。-->

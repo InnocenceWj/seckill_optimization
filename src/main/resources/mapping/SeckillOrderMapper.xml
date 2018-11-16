@@ -10,6 +10,14 @@
   <sql id="Base_Column_List">
     id, user_id, goods_id, order_id
   </sql>
+
+  <select id="findByGoodIdAndUserId" parameterType="java.lang.Long" resultType="com.wj.utils.PageData">
+    select
+    <include refid="Base_Column_List" />
+    from seckill_order
+    where goods_id = #{goodId} AND user_id=#{userId}
+  </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

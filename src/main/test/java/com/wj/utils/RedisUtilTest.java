@@ -1,5 +1,6 @@
 package com.wj.utils;
 
+import com.wj.entity.Good;
 import com.wj.redis.RedisDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,9 +23,11 @@ public class RedisUtilTest {
 
     @Test
     public void testRedis() {
-        boolean flag = redisDao.setString("wj","wangjing");
+        int a=2;
+        boolean flag = redisDao.setObj("wj",123L,a,100L);
         if(flag){
-            String str=redisDao.getString("wj");
+            int str=redisDao.getObj("wj",123L,Integer.class);
+            System.out.println(str);
         }
     }
 

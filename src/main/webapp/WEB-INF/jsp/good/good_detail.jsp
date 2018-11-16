@@ -23,6 +23,20 @@
         #goodslist td {
             border-top: 1px solid #39503f61;
         }
+
+        #seckillStaus {
+            font-size: 26px;
+            font-weight: bold;
+            margin: 5px auto;
+            background-color: #FAF0E6;
+            border: none;
+            padding: 10px 25px 10px 25px;
+            color: #FA8072;
+            box-shadow: 1px 1px 5px #B6B6B6;
+            border-radius: 3px;
+            text-shadow: 1px 1px 1px #FF6347;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -78,11 +92,11 @@
 <script>
     $(function () {
         seckill.detail.initSeckill({
-            goodId : ${good.goods_id},
+            goodId: ${good.goods_id},
             //转换ms时间
-            startTime : ${good.start_time.time},
-            endTime : ${good.end_time.time},
-            token:'${token}'
+            startTime: ${good.start_time.time},
+            endTime: ${good.end_time.time},
+            token: '${token}'
         });
     });
 </script>
