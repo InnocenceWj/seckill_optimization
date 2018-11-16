@@ -7,9 +7,11 @@ import com.wj.service.SeckillUserService;
 import com.wj.utils.MD5Util;
 import com.wj.utils.PageData;
 import com.wj.utils.UUIDUtil;
+import com.wj.utils.UserUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +24,7 @@ import java.util.Date;
  */
 @Controller
 @RequestMapping(value = "/login")
-public class LoginController extends BaseController{
+public class LoginController extends BaseController {
 
     @Resource
     private SeckillUserService seckillUserService;
@@ -34,8 +36,8 @@ public class LoginController extends BaseController{
 
     @RequestMapping(value = "/do_register")
     @ResponseBody
-    public Result<PageData> doRegister(){
-        PageData pd=this.getPageData();
+    public Result<PageData> doRegister() {
+        PageData pd = this.getPageData();
         pd.put("id", UUIDUtil.getGuid());
         pd.put("registerDate", new Date());
         pd.put("nickname", pd.getString("mobile"));
@@ -53,11 +55,12 @@ public class LoginController extends BaseController{
     @RequestMapping(value = "/do_login")
     @ResponseBody
     public Result<PageData> doLogin(HttpServletResponse response, HttpServletRequest request) {
-        PageData pd=this.getPageData();
+        PageData pd = this.getPageData();
         //登录
         String token = seckillUserService.login(response, pd);
-        request.getSession().setAttribute(Const.SESSION_USER,token);
-        pd.put("token",token);
+//        把token放到session中
+        UserUtils.setToken(token);
+        pd.put("token", token);
         return Result.success(pd);
     }
 

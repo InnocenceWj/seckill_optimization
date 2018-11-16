@@ -6,9 +6,10 @@ package com.wj.amqp;
  * @创建时间 2018/11/13
  * @描述
  */
-public class MQReceiver{
+public class MQReceiver {
 
-    public  void receive(String message){
-        System.out.println("接收到的消息："+message);
+    public void receive(String message) {
+//TODO
+        System.out.println("接收到的消息：" + message);
     }
 }

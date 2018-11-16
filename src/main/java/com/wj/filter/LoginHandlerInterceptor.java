@@ -1,6 +1,7 @@
 package com.wj.filter;
 
 import com.wj.const_wj.Const;
+import com.wj.utils.UserUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +20,7 @@ public class LoginHandlerInterceptor extends HandlerInterceptorAdapter {
         } else if (path.matches(Const.NO_INTERCEPTOR_PATH)) {
             return true;
         } else {
-            String token = (String) request.getSession().getAttribute(Const.SESSION_USER);
+            String token = UserUtils.getToken();
             if (token == null || token == "") {
                 System.out.println("AuthorizationInterceptor拦截请求");
                 request.getRequestDispatcher("/WEB-INF/jsp/login/login.jsp").forward(request, response);

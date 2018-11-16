@@ -6,6 +6,7 @@ import com.wj.entity.Good;
 import com.wj.service.GoodServie;
 import com.wj.service.SeckillGoodsService;
 import com.wj.utils.PageData;
+import com.wj.utils.UserUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,11 +40,10 @@ public class GoodsController extends BaseController {
     }
 
     @RequestMapping("/{id}/detail")
-    public ModelAndView toDetail(@PathVariable(value = "id") Long seckillId, HttpServletRequest request) {
+    public ModelAndView toDetail(@PathVariable(value = "id") long seckillId, HttpServletRequest request) {
         ModelAndView mv = this.getModelAndView();
         PageData pd=goodServie.findById(seckillId);
-        String token= (String) request.getSession().getAttribute(Const.SESSION_USER);
-        seckillGoodsServicedServie.createVerifyCode(token,seckillId);
+        String token= UserUtils.getToken();
         mv.addObject("good",pd);
         mv.addObject("token",token);
         mv.setViewName("good/good_detail");
