@@ -20,4 +20,6 @@ public interface SeckillGoodsService {
     boolean checkPath(PageData pd, long goodId);
 
     int reduceStock(long goodId);
+
+    PageData getStockById(long goodId);
 }

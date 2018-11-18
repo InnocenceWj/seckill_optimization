@@ -1,9 +1,6 @@
 package com.wj.service.impl;
 
-import com.wj.entity.SeckillGoods;
-import com.wj.entity.SeckillUser;
-import com.wj.mapper.GoodMapper;
-import com.wj.mapper.SeckillUserMapper;
+import com.wj.mapper.SeckillGoodsMapper;
 import com.wj.redis.GoodKey;
 import com.wj.redis.RedisDao;
 import com.wj.redis.SeckillKey;
@@ -11,16 +8,12 @@ import com.wj.service.SeckillGoodsService;
 import com.wj.utils.MD5Util;
 import com.wj.utils.PageData;
 import com.wj.utils.UUIDUtil;
-import com.wj.utils.VerfyUtil;
+import com.wj.utils.UserUtils;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
-
 import static com.wj.utils.VerfyUtil.calc;
 import static com.wj.utils.VerfyUtil.generateVerifyCode;
 
@@ -35,7 +28,7 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
     @Resource
     private RedisDao redisDao;
     @Resource
-    private SeckillGoodsService seckillGoodsService;
+    private SeckillGoodsMapper goodsMapper;
 
     @Override
     public BufferedImage createVerifyCode(String token, long goodsId) {
@@ -100,7 +93,7 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 
     @Override
     public boolean checkPath(PageData pd, long goodId) {
-        String token = pd.getString("token");
+        String token = UserUtils.getToken();
         String md5 = pd.getString("md5");
         String md5Old = redisDao.getString(SeckillKey.getSeckillPath.getPrefix()+token,goodId);
 //
@@ -121,6 +114,11 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
         pd.put("goods_stock",goodStock);
         redisDao.setGood(GoodKey.goodsDetail.getPrefix(),goodId,pd);
         return seckillStock;
+    }
+
+    @Override
+    public PageData getStockById(long goodId) {
+        return goodsMapper.getStockById(goodId);
     }
 
 

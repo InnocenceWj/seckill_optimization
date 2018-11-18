@@ -12,6 +12,22 @@
   <sql id="Base_Column_List">
     id, goods_id, seckill_price, stock_count, start_time, end_time
   </sql>
+
+  <update id="reduceStock" parameterType="com.wj.utils.PageData">
+    update seckill_goods
+    <set>
+      <if test="stockCount != null">
+        stock_count = #{stockCount}-1,
+      </if>
+    </set>
+    where goods_id = #{goodsId,jdbcType=BIGINT}
+  </update>
+  <select id="getStockById" parameterType="java.lang.Long" resultType="com.wj.utils.PageData">
+    select
+    stock_count
+    from seckill_goods
+    where goods_id = #{goodId,jdbcType=BIGINT}
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

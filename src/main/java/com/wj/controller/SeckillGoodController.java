@@ -114,10 +114,10 @@ public class SeckillGoodController extends BaseController {
             localOverMap.put(goodId, true);
             return Result.error(CodeMsg.SECKILL_OVER);
         }
-
         SeckillUser user = UserUtils.getUser();
-        long userId = user.getId();
-        pd = seckillOrderService.findByGoodIdAndUserId(goodId, userId);
+        pd.put("goodId",goodId);
+        pd.put("userId",user.getId());
+        pd = seckillOrderService.findByGoodIdAndUserId(pd);
         if (pd != null) {
             return Result.error(CodeMsg.REPEATE_SECKILL);
         }

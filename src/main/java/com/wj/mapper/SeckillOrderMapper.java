@@ -16,5 +16,7 @@ public interface SeckillOrderMapper {
 
     int updateByPrimaryKey(SeckillOrder record);
 
-    PageData findByGoodIdAndUserId(long goodId, long userId);
+    PageData findByGoodIdAndUserId(PageData pd);
+
+    void insertOrder(PageData pd);
 }

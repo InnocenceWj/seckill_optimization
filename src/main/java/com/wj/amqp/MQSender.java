@@ -1,5 +1,6 @@
 package com.wj.amqp;
 
+import com.wj.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,9 @@ public class MQSender{
     private AmqpTemplate amqpTemplate;
 
     public  void sendSeckillMessage(SeckillMessage message) {
-//        String msg = RedisService.beanToString(message);
-        String msg=message.getGoodsId()+"";
+        String msg = UserUtils.beanToString(message);
+//        String msg=message.getGoodsId()+"";
+
         log.info("send message:" + msg);
         amqpTemplate.convertAndSend(MQConfig.SECKILL_QUEUE, msg);
     }

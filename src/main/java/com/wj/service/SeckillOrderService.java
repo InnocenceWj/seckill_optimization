@@ -9,5 +9,7 @@ import com.wj.utils.PageData;
  */
 public interface SeckillOrderService {
 
-    PageData findByGoodIdAndUserId(long goodId, long userId);
+    PageData findByGoodIdAndUserId(PageData pd);
+
+    void excuteSeckill(PageData pd);
 }
