@@ -6,9 +6,6 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import javax.annotation.Resource;
-
 /**
  * @创建人 wj
  * @创建时间 2018/11/13
@@ -17,17 +14,14 @@ import javax.annotation.Resource;
 @Slf4j
 //不加@Service， 报错：NoSuchBeanDefinitionException: No qualifying bean of type 'com.wj.amqp.MQSender'
 @Service
-public class MQSender{
+public class MQSender {
 
     @Autowired
     private AmqpTemplate amqpTemplate;
 
-    public  void sendSeckillMessage(SeckillMessage message) {
+    public void sendSeckillMessage(SeckillMessage message) {
         String msg = UserUtils.beanToString(message);
-//        String msg=message.getGoodsId()+"";
-
         log.info("send message:" + msg);
-        amqpTemplate.convertAndSend(MQConfig.SECKILL_QUEUE, msg);
+        amqpTemplate.convertAndSend(MQConfig.SECKILL_EXCHANGE, MQConfig.SECKILL_QUEUE, msg);
     }
-
 }

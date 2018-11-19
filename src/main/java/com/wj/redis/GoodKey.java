@@ -6,7 +6,7 @@ package com.wj.redis;
  * @描述
  */
 public class GoodKey extends BasePrefix {
-    public static GoodKey goodsList = new GoodKey(60, "gl");
+    public static GoodKey goodsList = new GoodKey(120, "gl");
     public static GoodKey goodsDetail = new GoodKey(60, "gd");
     public static GoodKey seckillGoodsStock = new GoodKey(0, "gs");
     private GoodKey(int expireSeconds, String prefix) {

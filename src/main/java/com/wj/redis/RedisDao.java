@@ -1,7 +1,5 @@
 package com.wj.redis;
 
-import com.wj.utils.PageData;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
