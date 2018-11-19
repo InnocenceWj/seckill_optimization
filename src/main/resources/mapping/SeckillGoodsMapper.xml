@@ -20,7 +20,7 @@
         stock_count = #{stockCount}-1,
       </if>
     </set>
-    where goods_id = #{goodsId,jdbcType=BIGINT}
+    where goods_id = #{goodId,jdbcType=BIGINT}
   </update>
   <select id="getStockById" parameterType="java.lang.Long" resultType="com.wj.utils.PageData">
     select

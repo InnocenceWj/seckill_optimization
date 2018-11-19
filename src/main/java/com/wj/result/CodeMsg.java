@@ -37,6 +37,10 @@ public class CodeMsg {
     public static CodeMsg REPEATE_SECKILL = new CodeMsg(500501, "不能重复秒杀！");
     public static CodeMsg SECKILL_FAIL = new CodeMsg(500502, "秒杀失败！");
 
+    //    rabbitMq异常
+    public static CodeMsg  SEND_MQ= new CodeMsg(500601, "消息发送失败！");
+    public static CodeMsg  RECEIVE_MQ= new CodeMsg(500602, "消息接收失败！");
+
 
     private CodeMsg(int code, String msg) {
         this.code = code;
@@ -47,13 +51,5 @@ public class CodeMsg {
         int code = this.code;
         String message = String.format(this.msg, objects);
         return new CodeMsg(code, message);
-    }
-
-    @Override
-    public String toString() {
-        return "CodeMsg{" +
-                "code=" + code +
-                ", msg='" + msg + '\'' +
-                '}';
     }
 }

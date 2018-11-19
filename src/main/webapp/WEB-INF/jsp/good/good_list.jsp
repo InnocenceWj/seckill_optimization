@@ -1,8 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+%>
 <%@include file="/static/common/tag.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
+    <base href="<%=basePath%>">
     <title>秒杀列表页</title>
     <%@include file="/static/common/head.jsp" %>
 </head>
@@ -22,7 +27,7 @@
                 <thead>
                 <tr>
                     <th>名称</th>
-                    <th>库存</th>
+                    <th width="4%">库存</th>
                     <th>开始时间</th>
                     <th>结束时间</th>
                     <th>描述</th>
@@ -33,7 +38,7 @@
                 <c:forEach var="good" items="${goodList}">
                     <tr>
                         <td>${good.goods_name}</td>
-                        <td>${good.goods_stock}</td>
+                        <td>${good.stock_count}</td>
                         <td>
                             <fmt:formatDate value="${good.start_time}" pattern="yyyy-MM-dd HH:mm:ss"/>
                         </td>
@@ -42,7 +47,7 @@
                         </td>
                         <td>${good.goods_detail}</td>
                         <td>
-                            <a class="btn btn-info" href="/good/${good.id}/detail" target="_blank">link</a>
+                            <a class="btn btn-info" href="<%=basePath%>good/${good.id}/detail" target="_blank">link</a>
                         </td>
                     </tr>
                 </c:forEach>

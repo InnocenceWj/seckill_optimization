@@ -36,7 +36,7 @@ public class SeckillOrderServiceImpl implements SeckillOrderService {
 //                减库存
         boolean flag = seckillGoodsMapper.reduceStock(pd);
         if (flag) {
-            pd.put("order_id", UUIDUtil.getGuid());
+            pd.put("orderId", UUIDUtil.getGuid());
             pd.put("id", UUIDUtil.getGuid());
             seckillOrderMapper.insertOrder(pd);
         }

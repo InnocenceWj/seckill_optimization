@@ -75,10 +75,9 @@ var seckill = {
                     $(this).addClass('disabled');
                     $.post(seckill.URL.killUrl(goodId), {md5: result.data}, function (result) {
                         if (result) {
-                            // var killResult = result.data;
-                            // var state = killResult.state;
-                            // var stateInfo = killResult.stateInfo;
-                            // node.html('<span class="label label-success">' + stateInfo + '</span>')
+                            layer.msg(result.msg);
+                        }else{
+                            layer.msg('秒杀异常');
                         }
                     })
                 })

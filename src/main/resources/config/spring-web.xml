@@ -35,6 +35,9 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <!--异常处理类-->
+    <bean class="com.wj.exception.GlobalExceptionHandler"/>
+
     <!--xml存在非法字符，启动报错：SAXParseException: cvc-complex-type.2.3: 元素 'beans' 必须不含字符 [子级], 因为该类型的内容类型为“仅元素”。
         如果反复检查，未发现错误，可以注释后，就会发现非法字符出在哪里。
         这句是下面注释再注释后的样子：  &lt;!&ndash; 访问拦截&ndash;&gt;

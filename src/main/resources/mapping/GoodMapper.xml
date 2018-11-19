@@ -25,6 +25,7 @@
     FROM
     goods g
     LEFT JOIN seckill_goods sg ON g.id=sg.goods_id
+    ORDER BY sg.id DESC
   </select>
   <select id="findById"  resultType="com.wj.utils.PageData" parameterType="java.lang.Long">
     SELECT

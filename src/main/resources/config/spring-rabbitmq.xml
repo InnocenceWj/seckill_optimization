@@ -31,10 +31,10 @@
     <!--Fanout: 不管消息的routing key和参数表的头信息/值是什么, 消息将会路由到该队列上。-->
     <!--<direct-exchange name="email.exchange" durable="true">-->
         <!--<bindings>-->
-            <!--<binding queue="email"/>     &lt;!&ndash;默认的routing key与队列的名称相同&ndash;&gt;-->
+            <!--<binding queue="email"/>     默认的routing key与队列的名称相同-->
         <!--</bindings>-->
     <!--</direct-exchange>-->
-    <direct-exchange name="seckill_exchange">
+    <direct-exchange name="seckill_exchange" id="seckillExchange">
         <bindings>
             <binding queue="seckillQueue"/>
         </bindings>
@@ -47,7 +47,7 @@
 
     <!--4、配置监听器容器和监听器来接收消息-->
     <beans:bean id="seckillListener" class="com.wj.amqp.MQReceiver"/>
-    <listener-container connection-factory="connectionFactory" acknowledge="auto">
+    <listener-container connection-factory="connectionFactory">
         <listener ref="seckillListener" method="receive"
                   queues="seckillQueue"/>
     </listener-container>

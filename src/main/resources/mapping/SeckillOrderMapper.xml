@@ -21,7 +21,7 @@
   <insert id="insertOrder" parameterType="com.wj.utils.PageData">
   insert into seckill_order (id, user_id, goods_id,
   order_id)
-  values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{goodsId,jdbcType=BIGINT},
+  values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{goodId,jdbcType=BIGINT},
   #{orderId,jdbcType=BIGINT})
   </insert>
 
